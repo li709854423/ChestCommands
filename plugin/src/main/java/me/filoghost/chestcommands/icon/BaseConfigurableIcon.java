@@ -5,6 +5,8 @@
  */
 package me.filoghost.chestcommands.icon;
 
+import com.tuershen.nbtlibrary.NBTLibraryMain;
+import com.tuershen.nbtlibrary.api.NBTTagCompoundApi;
 import me.filoghost.chestcommands.api.Icon;
 import me.filoghost.chestcommands.placeholder.PlaceholderString;
 import me.filoghost.chestcommands.placeholder.PlaceholderStringList;
@@ -12,11 +14,7 @@ import me.filoghost.chestcommands.util.nbt.parser.MojangsonParseException;
 import me.filoghost.chestcommands.util.nbt.parser.MojangsonParser;
 import me.filoghost.fcommons.Preconditions;
 import me.filoghost.fcommons.collection.CollectionUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -29,11 +27,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class BaseConfigurableIcon implements Icon {
 
@@ -43,6 +37,7 @@ public abstract class BaseConfigurableIcon implements Icon {
 
     private String nbtData;
     private PlaceholderString name;
+    private String icon;
     private PlaceholderStringList lore;
     private Map<Enchantment, Integer> enchantments;
     private Color leatherColor;
@@ -119,6 +114,11 @@ public abstract class BaseConfigurableIcon implements Icon {
 
     public void setName(@Nullable String name) {
         this.name = PlaceholderString.of(name);
+        cachedRendering = null;
+    }
+
+    public void setIcon(@Nullable String icon) {
+        this.icon = icon;
         cachedRendering = null;
     }
 
@@ -315,6 +315,13 @@ public abstract class BaseConfigurableIcon implements Icon {
             enchantments.forEach(itemStack::addUnsafeEnchantment);
         }
 
+        //支持自定义图标
+        if (icon!=null){
+            NBTTagCompoundApi compound = NBTLibraryMain.libraryApi.getCompound(itemStack);
+            compound.setString("rpg",icon);
+            itemStack=NBTLibraryMain.libraryApi.setCompound(itemStack,compound);
+        }
+
 
         if (shouldCacheRendering()) {
             cachedRendering = itemStack;
@@ -322,5 +329,19 @@ public abstract class BaseConfigurableIcon implements Icon {
 
         return itemStack;
     }
+
+//    /**
+//     * 设置装备里的NBT
+//     * @param item
+//     * @param tagName
+//     * @param nbtBase
+//     */
+//    public static org.bukkit.inventory.ItemStack setItemNBTTag(org.bukkit.inventory.ItemStack item, String tagName, NBTBase nbtBase){
+//        ItemStack nbtItem= CraftItemStack.asNMSCopy(item);
+//        NBTTagCompound compound = (nbtItem.hasTag()) ? nbtItem.getTag() : new NBTTagCompound();
+//        compound.set(tagName,nbtBase);
+//        nbtItem.setTag(compound);
+//        return CraftItemStack.asBukkitCopy(nbtItem);
+//    }
 
 }

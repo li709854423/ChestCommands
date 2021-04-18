@@ -75,6 +75,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.tuershen</groupId>
+                <artifactId>NBTLibrary</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
                 <groupId>org.bukkit</groupId>
                 <artifactId>bukkit</artifactId>
                 <version>1.8-R0.1-SNAPSHOT</version>

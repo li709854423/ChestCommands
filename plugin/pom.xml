@@ -52,6 +52,11 @@
             <groupId>me.filoghost.fcommons</groupId>
             <artifactId>fcommons</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.tuershen</groupId>
+            <artifactId>NBTLibrary</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
